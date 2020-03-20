@@ -1,3 +1,5 @@
+package TouchPi;
+
 import Interface.Interface;
 import InternetRadio.InternetRadio;
 
@@ -7,14 +9,13 @@ public class TouchPi {
         new TouchPi();
     }
 
-    private InternetRadio internetRadio = new InternetRadio();
+    private InternetRadio internetRadio;
     private Interface anInterface;
 
     public TouchPi(){
-        //test(RadioStation.BAYERN3);
-        //internetRadio.play(RadioStation.BAYERN3);
-        anInterface = new Interface(false);
-        anInterface.setCurrentMenu(internetRadio.getMenu(anInterface.getPanel()));
+        anInterface = new Interface(true);
+        internetRadio = new InternetRadio(anInterface.getPanel(),anInterface);
+        anInterface.setCurrentMenu(anInterface.getMainMenu(internetRadio));
         anInterface.repaint();
         while(true){
             try {

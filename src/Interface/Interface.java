@@ -1,9 +1,9 @@
 package Interface;
 
+import InternetRadio.InternetRadio;
+
 import javax.swing.*;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
+import java.awt.event.*;
 
 public class Interface {
 
@@ -33,6 +33,11 @@ public class Interface {
     }
 
     public void setCurrentMenu(Menu currentMenu){
+        if(graphic.getCurrentMenu() != null){
+            for(Button button : graphic.getCurrentMenu().getButtons()){
+                panel.remove(button.getButton());
+            }
+        }
         graphic.setCurrentMenu(currentMenu);
         panel.repaint();
     }
@@ -92,6 +97,45 @@ public class Interface {
 
             }
         });
+    }
+
+    public Menu getMainMenu(InternetRadio internetRadio){
+        Menu menu = new Menu();
+        Button r = new Button(20, 20, 100, 65, panel, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                setCurrentMenu(internetRadio.getSelectionMenu());
+            }
+        },13);
+        r.setOffsetable(false);
+        menu.addButton(r);
+        // Navigation
+        Button b = new Button(0, 255, 100, 65, panel, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.out.println("Back");
+            }
+        },1);
+        b.setOffsetable(false);
+        menu.addButton(b);
+        Button h = new Button(190, 255, 100, 65, panel, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.out.println("Home");
+            }
+        },2);
+        h.setOffsetable(false);
+        menu.addButton(h);
+        Button n = new Button(380, 255, 100, 65, panel, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.out.println("Next");
+                setCurrentMenu(internetRadio.getPlayingMenu());
+            }
+        },3);
+        n.setOffsetable(false);
+        menu.addButton(n);
+        return menu;
     }
 
     public JPanel getPanel(){

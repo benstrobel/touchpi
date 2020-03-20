@@ -56,6 +56,10 @@ public class Button {
         }
     }
 
+    public void setTextureID(int textureID) {
+        this.textureID = textureID;
+    }
+
     public int getX() {
         return x;
     }

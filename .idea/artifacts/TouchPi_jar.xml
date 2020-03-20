@@ -1,0 +1,9 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="TouchPi:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/TouchPi_jar</output-path>
+    <root id="archive" name="TouchPi.jar">
+      <element id="module-output" name="TouchPi" />
+      <element id="extracted-dir" path="$USER_HOME$/Desktop/JLayer1.0.1/jl1.0.1.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>
