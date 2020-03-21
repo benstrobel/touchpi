@@ -17,5 +17,10 @@
             <artifactId>YahooFinanceAPI</artifactId>
             <version>3.15.0</version>
         </dependency>
+        <dependency>
+            <groupId>net.nitrado</groupId>
+            <artifactId>nitrapi</artifactId>
+            <version>1.1.0</version>
+        </dependency>
     </dependencies>
 </project>
