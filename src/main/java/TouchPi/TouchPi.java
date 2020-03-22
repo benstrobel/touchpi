@@ -3,9 +3,7 @@ package TouchPi;
 import Interface.Interface;
 import InternetRadio.InternetRadio;
 import Stock.StockInterface;
-import net.nitrado.api.Nitrapi;
-import net.nitrado.api.common.exceptions.*;
-import net.nitrado.api.services.Service;
+import WhosHome.WhosHome;
 
 public class TouchPi {
 
@@ -16,17 +14,19 @@ public class TouchPi {
     private InternetRadio internetRadio;
     private Interface anInterface;
     private StockInterface stockInterface;
+    private WhosHome whosHome;
 
     public TouchPi(){
-        anInterface = new Interface(false);
+        whosHome = new WhosHome();
         stockInterface = new StockInterface();
+        internetRadio = new InternetRadio();
+        anInterface = new Interface(false,internetRadio,stockInterface,whosHome);
         stockInterface.addtoWatchlist("TSLA");
         stockInterface.addtoWatchlist("IWDA.AS");
         stockInterface.addtoWatchlist("AMD");
         stockInterface.addtoWatchlist("LHA.DE");
         stockInterface.addtoWatchlist("DB");
-        internetRadio = new InternetRadio(anInterface.getPanel(),anInterface,stockInterface);
-        anInterface.setCurrentMenu(anInterface.getMainMenu(internetRadio,stockInterface));
+        anInterface.setCurrentMenu(anInterface.getMainMenu());
         anInterface.repaint();
         while(true){
             try {
@@ -35,30 +35,6 @@ public class TouchPi {
                 e.printStackTrace();
             }
             anInterface.repaint();
-        }
-
-    }
-
-    public void test(){
-        try
-        {
-            Nitrapi api = new Nitrapi("a");
-            Service [] service = api.getServices();
-        }catch (NitrapiErrorException e) {
-            // There was an error in our request to the api.
-            // ...
-        } catch (NitrapiAccessTokenInvalidException e) {
-            // The access token is no longer valid.
-            // ...
-        } catch (NitrapiHttpException e) {
-            // There was an error connecting to the api.
-            // ...
-        } catch (NitrapiConcurrencyException e) {
-            // The same action is already running.
-            // ...
-        } catch (NitrapiMaintenanceException e) {
-            // The Nitrapi is currently down for maintenance.
-            // ...
         }
 
     }

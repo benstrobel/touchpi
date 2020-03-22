@@ -2,6 +2,7 @@ package Interface;
 
 import InternetRadio.InternetRadio;
 import Stock.StockInterface;
+import WhosHome.WhosHome;
 
 import javax.swing.*;
 import java.awt.*;
@@ -14,10 +15,17 @@ public class Interface {
     private Graphic graphic;
     private Interface anInterface = this;
 
-    public Interface(boolean fullscreen){
+    private InternetRadio internetRadio;
+    private StockInterface stockInterface;
+    private WhosHome whosHome;
+
+    public Interface(boolean fullscreen, InternetRadio internetRadio, StockInterface stockInterface, WhosHome whosHome){
+        this.internetRadio = internetRadio;
+        this.stockInterface = stockInterface;
+        this.whosHome = whosHome;
         frame = new JFrame("TouchPi");
         frame.setSize(480,320);
-        frame.setLocation(0,0);
+        frame.setLocation(500,500);
         frame.setResizable(false);
         graphic = new Graphic();
         panel = graphic.setupPanel();
@@ -37,6 +45,10 @@ public class Interface {
 
     public void repaint(){
         frame.repaint();
+    }
+
+    public Menu getCurrentMenu(){
+        return graphic.getCurrentMenu();
     }
 
     public void setCurrentMenu(Menu currentMenu){
@@ -106,12 +118,12 @@ public class Interface {
         });
     }
 
-    public Menu getMainMenu(InternetRadio internetRadio, StockInterface stockInterface){
-        Menu menu = new Menu();
+    public Menu getMainMenu(){
+        Menu menu = new Menu("TouchPiMain");
         Button r = new Button(20, 20, 100, 65, panel, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                setCurrentMenu(internetRadio.getSelectionMenu());
+                setCurrentMenu(internetRadio.getSelectionMenu(anInterface));
             }
         },13);
         r.setOffsetable(false);
@@ -119,7 +131,7 @@ public class Interface {
         Button s = new Button(140, 20, 100, 65, panel, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                setCurrentMenu(stockInterface.getMenu(anInterface,internetRadio,panel));
+                setCurrentMenu(stockInterface.getMenu(anInterface));
             }
         },14);
         s.setOffsetable(false);
@@ -145,7 +157,7 @@ public class Interface {
             @Override
             public void actionPerformed(ActionEvent e) {
                 System.out.println("Next");
-                setCurrentMenu(internetRadio.getPlayingMenu());
+                setCurrentMenu(internetRadio.getPlayingMenu(anInterface));
             }
         },3);
         n.setOffsetable(false);

@@ -24,22 +24,59 @@ public class StockInterface {
         watchlist.add(watchentry);
     }
 
-    public void test(){
-        Stock stock = null;
-        try {
-            stock = YahooFinance.get("LHA.DE");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        BigDecimal price = stock.getQuote().getPrice();
-        BigDecimal change = stock.getQuote().getChangeInPercent();
-        BigDecimal peg = stock.getStats().getPeg();
-        BigDecimal dividend = stock.getDividend().getAnnualYieldPercent();
-        System.out.println("Price: " + price + " Change: " + change + " Peg: " + peg + " Dividend: " + dividend);
+    public Menu getMenu(Interface anInterface){
+        Thread loader = new Thread(){
+            @Override
+            public void run(){
+                Menu menu = getProperMenu(anInterface);
+                if(anInterface.getCurrentMenu().getiD().equals("StockFiller")){
+                    anInterface.setCurrentMenu(menu);
+                }
+            }
+        };
+        loader.start();
+        return getFillerMenu(anInterface);
     }
 
-    public Menu getMenu(Interface anInterface, InternetRadio internetRadio, JPanel panel){
-        Menu menu = new Menu();
+    private Menu getFillerMenu(Interface anInterface){
+        Menu menu = new Menu("StockFiller");
+        Stock stock = null;
+        for(int i = 0; i < watchlist.size(); i++){
+            menu.addNewText(watchlist.get(i),20, i*50+40, 30, Color.white);
+        }
+        // Navigation
+        Button b = new Button(0, 255, 100, 65, anInterface.getPanel(), new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.out.println("Back");
+                anInterface.setCurrentMenu(anInterface.getMainMenu());
+            }
+        },1);
+        b.setOffsetable(false);
+        menu.addButton(b);
+        Button h = new Button(190, 255, 100, 65, anInterface.getPanel(), new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.out.println("Home");
+                anInterface.setCurrentMenu(anInterface.getMainMenu());
+            }
+        },2);
+        h.setOffsetable(false);
+        menu.addButton(h);
+        Button n = new Button(380, 255, 100, 65, anInterface.getPanel(), new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.out.println("Refresh");
+                anInterface.setCurrentMenu(getMenu(anInterface));
+            }
+        },17);
+        n.setOffsetable(false);
+        menu.addButton(n);
+        return menu;
+    }
+
+    private Menu getProperMenu(Interface anInterface){
+        Menu menu = new Menu("StockProper");
         Stock stock = null;
         for(int i = 0; i < watchlist.size(); i++){
             String watchentry = watchlist.get(i);
@@ -52,7 +89,7 @@ public class StockInterface {
             BigDecimal change = stock.getQuote().getChangeInPercent();
             if(change.compareTo(new BigDecimal(0)) > 0){
                 menu.addNewText(watchentry,20, i*50+40, 30, Color.white);
-                menu.addButton(new Button(170, i*50+40-25, 30, 30, panel, new ActionListener() {
+                menu.addButton(new Button(170, i*50+40-25, 30, 30, anInterface.getPanel(), new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
 
@@ -62,7 +99,7 @@ public class StockInterface {
                 menu.addNewText(""+stock.getQuote().getPrice()+" €", 350, i*50+40,30, Color.WHITE);
             }else{
                 menu.addNewText(watchentry,20, i*50+40, 30, Color.white);
-                menu.addButton(new Button(170, i*50+40-25, 30, 30, panel, new ActionListener() {
+                menu.addButton(new Button(170, i*50+40-25, 30, 30, anInterface.getPanel(), new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
 
@@ -73,29 +110,29 @@ public class StockInterface {
             }
         }
         // Navigation
-        Button b = new Button(0, 255, 100, 65, panel, new ActionListener() {
+        Button b = new Button(0, 255, 100, 65, anInterface.getPanel(), new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 System.out.println("Back");
-                anInterface.setCurrentMenu(anInterface.getMainMenu(internetRadio,stockInterface));
+                anInterface.setCurrentMenu(anInterface.getMainMenu());
             }
         },1);
         b.setOffsetable(false);
         menu.addButton(b);
-        Button h = new Button(190, 255, 100, 65, panel, new ActionListener() {
+        Button h = new Button(190, 255, 100, 65, anInterface.getPanel(), new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 System.out.println("Home");
-                anInterface.setCurrentMenu(anInterface.getMainMenu(internetRadio,stockInterface));
+                anInterface.setCurrentMenu(anInterface.getMainMenu());
             }
         },2);
         h.setOffsetable(false);
         menu.addButton(h);
-        Button n = new Button(380, 255, 100, 65, panel, new ActionListener() {
+        Button n = new Button(380, 255, 100, 65, anInterface.getPanel(), new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 System.out.println("Refresh");
-                anInterface.setCurrentMenu(getMenu(anInterface,internetRadio,panel));
+                anInterface.setCurrentMenu(getMenu(anInterface));
             }
         },17);
         n.setOffsetable(false);

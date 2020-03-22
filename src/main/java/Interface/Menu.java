@@ -8,6 +8,15 @@ public class Menu {
     private ArrayList<Button> buttons = new ArrayList<>();
     private ArrayList <GraphicText> textList = new ArrayList<GraphicText>();
     private static int maxiD = 0;
+    private String iD;
+
+    public Menu(String iD){
+        this.iD = iD;
+    }
+
+    public String getiD() {
+        return iD;
+    }
 
     public void addButton(Button button){
         buttons.add(button);
