@@ -120,6 +120,7 @@ public class Interface {
 
     public Menu getMainMenu(){
         Menu menu = new Menu("TouchPiMain");
+
         Button r = new Button(20, 20, 100, 65, panel, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -128,6 +129,7 @@ public class Interface {
         },13);
         r.setOffsetable(false);
         menu.addButton(r);
+
         Button s = new Button(140, 20, 100, 65, panel, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -136,6 +138,16 @@ public class Interface {
         },14);
         s.setOffsetable(false);
         menu.addButton(s);
+
+        Button w = new Button(260, 20, 100, 65, panel, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                setCurrentMenu(whosHome.getMenu(anInterface));
+            }
+        },19);
+        w.setOffsetable(false);
+        menu.addButton(w);
+
         // Navigation
         Button b = new Button(0, 255, 100, 65, panel, new ActionListener() {
             @Override
