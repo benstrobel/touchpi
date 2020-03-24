@@ -3,25 +3,47 @@ package Stock;
 import Interface.Button;
 import Interface.Interface;
 import Interface.Menu;
-import InternetRadio.InternetRadio;
 import yahoofinance.Stock;
 import yahoofinance.YahooFinance;
 
-import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.math.MathContext;
 import java.util.ArrayList;
 
 public class StockInterface {
 
     private StockInterface stockInterface = this;
     private ArrayList<String> watchlist = new ArrayList<>();
+    private Thread refresher;
 
     public void addtoWatchlist(String watchentry){
         watchlist.add(watchentry);
+    }
+
+    private void startrefresher(Interface anInterface){
+        refresher = new Thread(){
+            @Override
+            public void run(){
+              while(true){
+                  try {
+                      Thread.sleep(30*1000);
+                  } catch (InterruptedException e) {
+                      e.printStackTrace();
+                  }
+                  if(anInterface.getCurrentMenu().getiD().equals("StockProper") || anInterface.getCurrentMenu().getiD().equals("StockFiller")){
+                      System.out.println("refreshing");
+                      anInterface.setCurrentMenu(getMenu(anInterface));
+                  }else{
+                      break;
+                  }
+              }
+          }
+        };
+        refresher.start();
     }
 
     public Menu getMenu(Interface anInterface){
@@ -34,6 +56,9 @@ public class StockInterface {
                 }
             }
         };
+        if(refresher == null){
+            startrefresher(anInterface);
+        }
         loader.start();
         return getFillerMenu(anInterface);
     }
@@ -42,7 +67,7 @@ public class StockInterface {
         Menu menu = new Menu("StockFiller");
         Stock stock = null;
         for(int i = 0; i < watchlist.size(); i++){
-            menu.addNewText(watchlist.get(i),20, i*50+40, 30, Color.white);
+            menu.addNewText(watchlist.get(i),20, i*35+40, 25, Color.white);
         }
         // Navigation
         Button b = new Button(0, 255, 100, 65, anInterface.getPanel(), new ActionListener() {
@@ -88,25 +113,29 @@ public class StockInterface {
             if(stock == null){return menu;}
             BigDecimal change = stock.getQuote().getChangeInPercent();
             if(change.compareTo(new BigDecimal(0)) > 0){
-                menu.addNewText(watchentry,20, i*50+40, 30, Color.white);
-                menu.addButton(new Button(170, i*50+40-25, 30, 30, anInterface.getPanel(), new ActionListener() {
+                menu.addNewText(watchentry,20, i*35+40, 25, Color.white);
+                Button a = new Button(170, i*35+40-25, 25, 25, anInterface.getPanel(), new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
 
                     }
-                }, 15));
-                menu.addNewText(" "+stock.getQuote().getChangeInPercent()+"%",220, i*50+40, 30, Color.green);
-                menu.addNewText(""+stock.getQuote().getPrice()+" €", 350, i*50+40,30, Color.WHITE);
+                }, 15);
+                a.setOffsetable(false);
+                menu.addButton(a);
+                menu.addNewText(" "+stock.getQuote().getChangeInPercent()+"%",220, i*35+40, 25, Color.green);
+                menu.addNewText(""+stock.getQuote().getPrice().round(new MathContext(4))+" €", 350, i*35+40,25, Color.WHITE);
             }else{
-                menu.addNewText(watchentry,20, i*50+40, 30, Color.white);
-                menu.addButton(new Button(170, i*50+40-25, 30, 30, anInterface.getPanel(), new ActionListener() {
+                menu.addNewText(watchentry,20, i*35+40, 25, Color.white);
+                Button a = new Button(170, i*35+40-25, 25, 25, anInterface.getPanel(), new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
 
                     }
-                }, 16));
-                menu.addNewText(stock.getQuote().getChangeInPercent()+"%",220, i*50+40, 30, Color.red);
-                menu.addNewText(""+stock.getQuote().getPrice()+" €", 350, i*50+40,30, Color.WHITE);
+                }, 16);
+                a.setOffsetable(false);
+                menu.addButton(a);
+                menu.addNewText(stock.getQuote().getChangeInPercent()+"%",220, i*35+40, 25, Color.red);
+                menu.addNewText(""+stock.getQuote().getPrice().round(new MathContext(4))+" €", 350, i*35+40,25, Color.WHITE);
             }
         }
         // Navigation

@@ -20,12 +20,13 @@ public class TouchPi {
         whosHome = new WhosHome();
         stockInterface = new StockInterface();
         internetRadio = new InternetRadio();
-        anInterface = new Interface(false,internetRadio,stockInterface,whosHome);
-        stockInterface.addtoWatchlist("TSLA");
-        stockInterface.addtoWatchlist("IWDA.AS");
-        stockInterface.addtoWatchlist("AMD");
+        anInterface = new Interface(true,internetRadio,stockInterface,whosHome);
+        stockInterface.addtoWatchlist("TL0.DE");
+        stockInterface.addtoWatchlist("EUNL.DE");
+        stockInterface.addtoWatchlist("AMD.DE");
         stockInterface.addtoWatchlist("LHA.DE");
-        stockInterface.addtoWatchlist("DB");
+        stockInterface.addtoWatchlist("DBK.DE");
+        stockInterface.addtoWatchlist("RY4C.DE");
         anInterface.setCurrentMenu(anInterface.getMainMenu());
         anInterface.repaint();
         while(true){

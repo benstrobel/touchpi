@@ -24,7 +24,11 @@ public class GraphicText {
         g2d.setColor(color);
         AffineTransform orig = g2d.getTransform();
         g2d.rotate(Math.toRadians(orientation));
-        g2d.drawString(text,x,y);
+        if(orientation == 180){
+            g2d.drawString(text,x,y);
+        }else{
+            g2d.drawString(text,x,y);
+        }
         g2d.setTransform(orig);
     }
 

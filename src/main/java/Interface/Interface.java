@@ -25,7 +25,7 @@ public class Interface {
         this.whosHome = whosHome;
         frame = new JFrame("TouchPi");
         frame.setSize(480,320);
-        frame.setLocation(500,500);
+        frame.setLocation(0,0);
         frame.setResizable(false);
         graphic = new Graphic();
         panel = graphic.setupPanel();

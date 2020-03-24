@@ -3,9 +3,9 @@ package WhosHome;
 import Interface.Button;
 import Interface.Interface;
 import Interface.Menu;
-import InternetRadio.InternetRadio;
 
-import javax.swing.*;
+
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.net.InetAddress;
@@ -16,8 +16,43 @@ public class WhosHome {
 
     private Date wtime = null, gtime = null, mtime = null, ptime = null, btime = null;
 
+    public WhosHome(){
+        Thread updatethread = new Thread(){
+            @Override
+            public void run(){
+              while(true){
+                  update();
+                  try {
+                      Thread.sleep(1*60*1000);
+                  } catch (InterruptedException e) {
+                      e.printStackTrace();
+                  }
+              }
+          }
+        };
+        updatethread.start();
+    }
+
+    private String getTimeDiffString(String name, Date current, Date pastdate){
+        if(pastdate == null){
+            return ""+name+" zuletzt vor " + "   Stunden und   Minuten";
+        }
+        long diff = current.getTime()-pastdate.getTime();
+        long diffSecs = diff / 1000 % 60;
+        long diffMins = diff / (60 * 1000) % 60;
+        long diffHours = diff / (60 * 60 * 1000) % 24;
+        return ""+name+" zuletzt vor " + diffHours + " Stunden und " + diffMins + " Minuten";
+    }
+
     public Menu getMenu(Interface anInterface){
         Menu menu = new Menu("WhosHomeMain");
+        Date current = new Date();
+        int i = 0;
+        menu.addNewText(getTimeDiffString("Willi", current, wtime), 20, (i++)*30+40, 23, Color.white);
+        menu.addNewText(getTimeDiffString("Gerti", current, gtime), 20, (i++)*30+40, 23, Color.white);
+        menu.addNewText(getTimeDiffString("Maxi", current, mtime), 20, (i++)*30+40, 23, Color.white);
+        menu.addNewText(getTimeDiffString("Philipp", current, ptime), 20, (i++)*30+40, 23, Color.white);
+        menu.addNewText(getTimeDiffString("Ben", current, btime), 20, (i++)*30+40, 23, Color.white);
         // Navigation
         Button b = new Button(0, 255, 100, 65, anInterface.getPanel(), new ActionListener() {
             @Override
@@ -41,6 +76,7 @@ public class WhosHome {
             @Override
             public void actionPerformed(ActionEvent e) {
                 System.out.println("Refresh");
+                update();
                 anInterface.setCurrentMenu(getMenu(anInterface));
             }
         },17);
@@ -56,7 +92,6 @@ public class WhosHome {
         m = getInetAddress("MaxiHandy.fritz.box");
         p = getInetAddress("PhilippHandy.fritz.box");
         b = getInetAddress("BenHandy.fritz.box");
-        System.out.println("Pinging...");
         boolean [] result = ping(new InetAddress[] {w,g,m,p,b});
         if(result[0]){
             wtime = new Date();
@@ -73,11 +108,6 @@ public class WhosHome {
         if(result[4]){
             btime = new Date();
         }
-        System.out.println("Willi war zuletzt um " + wtime + " aktiv.");
-        System.out.println("Gerti war zuletzt um " + gtime + " aktiv.");
-        System.out.println("Maxi war zuletzt um " + mtime + " aktiv.");
-        System.out.println("Philipp war zuletzt um " + ptime + " aktiv.");
-        System.out.println("Bene war zuletzt um " + btime + " aktiv.");
     }
 
     private InetAddress getInetAddress(String ip){
@@ -89,6 +119,7 @@ public class WhosHome {
     }
 
     private boolean [] ping(InetAddress [] inetAddress){
+        System.out.println("Pinging");
         PingThread [] pingThreads = new PingThread[inetAddress.length];
         boolean [] results = new boolean[inetAddress.length];
         for(int i = 0; i < inetAddress.length; i++){

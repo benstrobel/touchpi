@@ -9,7 +9,6 @@ import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
 
 public class Graphic {
 
@@ -17,7 +16,7 @@ public class Graphic {
     public static BufferedImage [] images;
     private String [] texturepaths = {"btn.png","backbtn.png","homebtn.png","music.png","antennebayern.png","bayern1.png","bayern2.png","bayern3.png","brklassik.png","brheimat.png","dasding.png","swr3.png","pauseplay.png","radio.png", "stock.png","up.png","down.png","refresh.png","cursor.png","whoshome.png"};
     private Rectangle2D bgrect = new Rectangle2D.Double(0,0,480,320);
-    private double orientation = 0.0;
+    private double orientation = 0;
 
     public Graphic(){
         loadTextures();
